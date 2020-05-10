@@ -1,0 +1,45 @@
+---
+ - name: Build a webserver on hosts
+   hosts: web_server
+   remote_user: stduent
+   vars:
+      web_package: httpd
+      firwall_package: firewalld
+      web_service: httpd
+      firewall_service: firewalld
+      rule: http
+   tasks:
+      - name: Install web_package and firewall_package
+        yum:
+          name:      
+             - "{{ web_package }}"
+             - "{{ firewall_package }}"
+          state: present
+          
+      - name: Enbale the services web_service and firewall_service 
+        service:
+            - name: "{{ web_service }}"
+              state: started
+              enabled: true
+      - name: enable the firewall_service 
+        service:
+             name: "{{ firewall_service }}"
+             state: started
+             enabled: true
+             
+      - name: Content display to web_server
+        copy:
+          content: "Hello successfully build the new webserver\n"
+          dest: /var/www/html/index.html
+          
+      - name: Enbale the rule on firewall
+        firewalld:
+              service: "{{ rule}}"
+              permanent: yes
+              immedaite: yes
+              enabled: true
+          
+             
+             
+             
+              
